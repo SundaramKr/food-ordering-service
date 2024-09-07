@@ -22,8 +22,13 @@ public class RestaurantController {
 
     @PostMapping
     public String saveRestaurant(@RequestBody Restaurant restaurantBody) {
-        restaurantService.saveRestaurant(restaurantBody);
-        return "ID of New Restaurant: " + restaurantBody.getId();
+        double ratings = restaurantBody.getRatings();
+        if (ratings > 5.0 || ratings < 0.0) {
+            return "Ratings should be in the range 0.0-5.0";
+        } else {
+            restaurantService.saveRestaurant(restaurantBody);
+            return "ID of New Restaurant: " + restaurantBody.getId();
+        }
     }
 
     @GetMapping("/id/{myID}")
