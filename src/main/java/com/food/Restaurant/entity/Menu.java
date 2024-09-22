@@ -5,24 +5,20 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Document(collection = "restaurants")
+@Document(collection = "menu")
 @Data
 @NoArgsConstructor
-public class Restaurant {
+public class Menu {
     @Id
     private ObjectId id;
-    @NonNull
     private String name;
-    private String imgLink;
-    private String[] cuisine;
-    private String location;
+    private Double price;
+    private String type;
+    private String tags;
     private Double ratings;
-    @DBRef
-    private List<Menu> items = new ArrayList<>();
+    private String imgLink;
+    private String[] ingredients;
+    private String description;
 }
