@@ -46,4 +46,13 @@ public class MenuService {
             restaurant.getItems().add(saved);
         restaurantService.saveRestaurant(restaurant);
     }
+
+    public void removeRestaurantMenuItem(ObjectId restaurantId, ObjectId menuId) {
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId).orElse(null);
+        if(restaurant!=null)
+            restaurant.getItems().removeIf(x -> x.getId().equals(menuId));
+        restaurantService.saveRestaurant(restaurant);
+        menuRepository.deleteById(menuId);
+
+    }
 }

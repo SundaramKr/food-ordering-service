@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/menu")
@@ -58,4 +59,58 @@ public class MenuController {
         }
     }
 
+    @GetMapping("/id/{menuID}")
+    public ResponseEntity<?> getMenuItemById(@PathVariable ObjectId menuID) {
+        Optional<Menu> menuItem = menuService.getMenuItemById(menuID);
+        if (menuItem.isPresent()) {
+            return new ResponseEntity<>(menuItem.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Menu Item ID not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/restaurantId/{restaurantId}/menuId/{menuId}")
+    public ResponseEntity<?> removeMenuItem(@PathVariable ObjectId restaurantId, @PathVariable ObjectId menuId) {
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId).orElse(null);
+        //Valid restaurantId check
+        if (restaurant == null)
+            return new ResponseEntity<>("Restaurant ID Not Found", HttpStatus.NOT_FOUND);
+
+        Menu Item = menuService.getMenuItemById(menuId).orElse(null);
+        List<Menu> menuItems = restaurant.getItems();
+        //valid menuId link to restaurantId check
+        if (!menuItems.contains(Item))
+            return new ResponseEntity<>("Menu Item does not belong to Restaurant", HttpStatus.BAD_REQUEST);
+        //valid menuId check
+        if (Item != null) {
+            menuService.removeRestaurantMenuItem(restaurantId, menuId);
+            return new ResponseEntity<>("Deleted ID " + menuId, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Menu Item ID not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/restaurantId/{restaurantId}/menuId/{menuId}")
+    public ResponseEntity<?> updateMenuItem(@PathVariable ObjectId restaurantId,
+                                            @PathVariable ObjectId menuId,
+                                            @RequestBody Menu newItem) {
+        Restaurant restaurant = restaurantService.getRestaurantById(restaurantId).orElse(null);
+        //Valid restaurantId check
+        if (restaurant == null)
+            return new ResponseEntity<>("Restaurant ID Not Found", HttpStatus.NOT_FOUND);
+
+        Menu oldItem = menuService.getMenuItemById(menuId).orElse(null);
+        List<Menu> menuItems = restaurant.getItems();
+        //valid menuId link to restaurantId check
+        if (!menuItems.contains(oldItem))
+            return new ResponseEntity<>("Menu Item does not belong to Restaurant", HttpStatus.BAD_REQUEST);
+        //valid menuId check
+        if (oldItem != null) {
+            oldItem.setName(newItem.getName().isBlank() ? oldItem.getName() : newItem.getName());
+            menuService.saveMenuItem(oldItem);
+            return new ResponseEntity<>("ID of updated menu item " + menuId, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Menu Item ID not found", HttpStatus.NOT_FOUND);
+        }
+    }
 }
