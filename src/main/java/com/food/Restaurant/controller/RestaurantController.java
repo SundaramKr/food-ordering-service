@@ -2,6 +2,7 @@ package com.food.Restaurant.controller;
 
 import com.food.Restaurant.entity.Restaurant;
 import com.food.Restaurant.service.RestaurantService;
+import com.food.Restaurant.utils.ResponseConstants;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class RestaurantController {
         if (allEntries != null && !allEntries.isEmpty()) {
             return new ResponseEntity<>(allEntries, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("No restaurants to show in the collection", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ResponseConstants.NO_RESTAURANTS, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -32,7 +33,7 @@ public class RestaurantController {
         try {
             double ratings = restaurantBody.getRatings();
             if (ratings > 5.0 || ratings < 0.0) {
-                return new ResponseEntity<>("Ratings should be in the range 0.0-5.0", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(ResponseConstants.RATING_RANGE, HttpStatus.BAD_REQUEST);
             } else {
                 restaurantService.saveRestaurant(restaurantBody);
                 return new ResponseEntity<>("ID of New Restaurant: " + restaurantBody.getId(), HttpStatus.CREATED);
@@ -48,7 +49,7 @@ public class RestaurantController {
         if (restaurant != null) {
             return new ResponseEntity<>(restaurant, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("ID not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ResponseConstants.ID_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -59,7 +60,7 @@ public class RestaurantController {
             restaurantService.deleteRestaurantById(myID);
             return new ResponseEntity<>("ID of Deleted Restaurant: " + myID, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("ID not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ResponseConstants.ID_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -77,7 +78,7 @@ public class RestaurantController {
             restaurantService.saveRestaurant(oldRestaurant);
             return new ResponseEntity<>("ID of Updated Restaurant: " + myID, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("ID not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ResponseConstants.ID_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
     }
 }
