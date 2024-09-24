@@ -18,6 +18,7 @@ public class RestaurantController {
     @Autowired
     private RestaurantService restaurantService;
 
+    //GET
     @GetMapping
     public ResponseEntity<?> getAll() {
         List<Restaurant> allEntries = restaurantService.getAllRestaurants();
@@ -28,6 +29,7 @@ public class RestaurantController {
         }
     }
 
+    //POST
     @PostMapping
     public ResponseEntity<?> saveRestaurant(@RequestBody Restaurant restaurantBody) {
         try {
@@ -43,6 +45,7 @@ public class RestaurantController {
         }
     }
 
+    //GET by ID (Path Param)
     @GetMapping("/id/{myID}")
     public ResponseEntity<?> getRestaurantById(@PathVariable ObjectId myID) {
         Restaurant restaurant = restaurantService.getRestaurantById(myID).orElse(null);
@@ -53,6 +56,7 @@ public class RestaurantController {
         }
     }
 
+    //DELETE
     @DeleteMapping("/id/{myID}")
     public ResponseEntity<?> deleteRestaurantById(@PathVariable ObjectId myID) {
         Restaurant restaurant = restaurantService.getRestaurantById(myID).orElse(null);
@@ -64,6 +68,7 @@ public class RestaurantController {
         }
     }
 
+    //PUT(Update)
     @PutMapping("/id/{myID}")
     public ResponseEntity<?> updateRestaurantById(@PathVariable ObjectId myID, @RequestBody Restaurant newRestaurant) {
         Restaurant oldRestaurant = restaurantService.getRestaurantById(myID).orElse(null);

@@ -42,17 +42,16 @@ public class MenuService {
     public void saveRestaurantMenuItem(Menu menuItem, ObjectId id) {
         Restaurant restaurant = restaurantService.getRestaurantById(id).orElse(null);
         Menu saved = menuRepository.save(menuItem);
-        if(restaurant!=null)
+        if (restaurant != null)
             restaurant.getItems().add(saved);
         restaurantService.saveRestaurant(restaurant);
     }
 
     public void removeRestaurantMenuItem(ObjectId restaurantId, ObjectId menuId) {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId).orElse(null);
-        if(restaurant!=null)
+        if (restaurant != null)
             restaurant.getItems().removeIf(x -> x.getId().equals(menuId));
         restaurantService.saveRestaurant(restaurant);
         menuRepository.deleteById(menuId);
-
     }
 }

@@ -23,6 +23,7 @@ public class MenuController {
     @Autowired
     private RestaurantService restaurantService;
 
+    //Get all Menu Items in the collection menu
     @GetMapping
     public ResponseEntity<?> getItems() {
         List<Menu> allItems = menuService.getMenu();
@@ -33,6 +34,7 @@ public class MenuController {
         }
     }
 
+    //Get all the Menu Items of Restaurant 'ID'
     @GetMapping("{ID}")
     public ResponseEntity<?> getAllMenuItems(@PathVariable ObjectId ID) {
         Restaurant restaurant = restaurantService.getRestaurantById(ID).orElse(null);
@@ -46,6 +48,7 @@ public class MenuController {
         }
     }
 
+    //Post the Menu Item to the Restaurant 'ID'
     @PostMapping("{ID}")
     public ResponseEntity<?> saveMenuItem(@PathVariable ObjectId ID, @RequestBody Menu menuItem) {
         try {
@@ -59,9 +62,10 @@ public class MenuController {
         }
     }
 
-    @GetMapping("/id/{menuID}")
-    public ResponseEntity<?> getMenuItemById(@PathVariable ObjectId menuID) {
-        Optional<Menu> menuItem = menuService.getMenuItemById(menuID);
+    //Get the Menu Item 'menuId'
+    @GetMapping("/id/{menuId}")
+    public ResponseEntity<?> getMenuItemById(@PathVariable ObjectId menuId) {
+        Optional<Menu> menuItem = menuService.getMenuItemById(menuId);
         if (menuItem.isPresent()) {
             return new ResponseEntity<>(menuItem.get(), HttpStatus.OK);
         } else {
@@ -69,6 +73,7 @@ public class MenuController {
         }
     }
 
+    //Delete the Menu Item 'menuId' from the Restaurant 'restaurantId'
     @DeleteMapping("/restaurantId/{restaurantId}/menuId/{menuId}")
     public ResponseEntity<?> removeMenuItem(@PathVariable ObjectId restaurantId, @PathVariable ObjectId menuId) {
         Restaurant restaurant = restaurantService.getRestaurantById(restaurantId).orElse(null);
@@ -90,6 +95,7 @@ public class MenuController {
         }
     }
 
+    //Update the Menu Item 'menuId' from the Restaurant 'restaurantId'
     @PutMapping("/restaurantId/{restaurantId}/menuId/{menuId}")
     public ResponseEntity<?> updateMenuItem(@PathVariable ObjectId restaurantId,
                                             @PathVariable ObjectId menuId,
