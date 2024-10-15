@@ -99,6 +99,7 @@ public class UserController {
         }
     }
 
+    //Update User 'userId'
     @PutMapping("/userId/{userId}")
     public ResponseEntity<?> updateUser(@RequestBody User newUser, @PathVariable ObjectId userId) {
         User oldUser = userService.findUserById(userId).orElse(null);
